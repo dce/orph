@@ -12,6 +12,7 @@ Gem::Specification.new do |s|
   s.description = %q{Orphans (commonly referred to as 'widows') are
                      single-word lines at the end of paragraphs. This
                      library removes them with non-breaking spaces.}
+  s.homepage    = %q{https://github.com/dce/orph}
 
   s.rubyforge_project = "orph"
 
