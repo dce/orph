@@ -27,7 +27,11 @@ class Orph
   end
 
   def text_node?(node)
-    node.is_a?(Nokogiri::XML::Text) && !node.blank?
+    node.is_a?(Nokogiri::XML::Text)
+  end
+
+  def has_space?(node)
+    node.to_s.include?(" ")
   end
 
   def content_tag?(node)
@@ -38,14 +42,16 @@ class Orph
     content_tag?(node) && !node.children.all? { |child| child.blank? || content_tag?(child) }
   end
 
-  def remove_widow(nodes)
-    smash = lambda { |html| html.reverse.sub(" ", "&#160;".reverse).reverse }
+  def replace_final_space(html)
+    html.reverse.sub(" ", "&#160;".reverse).reverse
+  end
 
+  def remove_widow(nodes)
     nodes.reverse.each do |node|
-      if text_node?(node) && node.to_s.include?(" ")
-        node.replace smash[node.to_html]
+      if text_node?(node) && has_space?(node)
+        node.replace replace_final_space(node.to_html)
         return true
-      elsif !node.is_a?(Nokogiri::XML::Text)
+      elsif !text_node?(node)
         return true if remove_widow(node.children)
       end
     end
